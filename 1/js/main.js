@@ -62,7 +62,30 @@ function onMouseMove(event) {
 		}
 	}
 }
+function onMouseDown(event) {
+	if(magnet.contains(event.point)) isBeingDragged = true;
+}
 
+function onMouseDrag(event) {
+	if(isBeingDragged) magnet.position = event.point;
+}
+function onMouseUp(event) {
+	if(magnet.contains(event.point)) {
+		isBeingDragged = false;
+		for(var i=0; i<NUM_ROWS; i++) {
+			for(var j=0; j<NUM_ROWS; j++) {
+				//For every dot in the grid...
+				var dot = grid[i][j];
+				console.log(magnet.hitTest(dot.position));
+				if(magnet.hitTest(dot.position, {
+					tolerance: 10,
+				})) {
+					dot.position += PUSH_DIST;
+				}
+			}
+		}
+	}
+}
 
 /*
 function onFrame(event) {
