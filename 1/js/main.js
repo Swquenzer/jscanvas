@@ -6,6 +6,7 @@ var Y_CENTER = view.viewSize.height/2;
 var NUM_ROWS = 25;
 var PUSH_DIST = 20 ;
 var DOT_RADIUS = 10;
+var STROKE_WIDTH = 2;
 var isBeingDragged = false;
 
 //Create Grid of dots
@@ -18,11 +19,25 @@ var grid = [];
 				center: [i*SPACING, j*SPACING],
 			    radius: DOT_RADIUS,
 			    strokeColor: 'black',
+			    strokeWidth: STROKE_WIDTH,
 			    fillColor: '9dd5ea'
 			});
+
+			//Offset grid so all dots are visible on screen
+			grid[i][j].position += DOT_RADIUS+STROKE_WIDTH;
 		}
 	}
 })(NUM_ROWS);
+
+function test(strColor) {
+	for(var i=0; i < NUM_ROWS; i++) {
+		for(var j=0; j < NUM_ROWS; j++) {
+			//For every dot in the grid...
+			var dot = grid[i][j];
+			dot.strokeWidth = strColor;
+		}
+	}
+}
 
 var magnet = new Shape.Circle({
 	center: view.center,
@@ -52,6 +67,7 @@ function onMouseMove(event) {
 				}
 				dot.blendMode = "overlay";
 				//and then check for distance and direction to move dot
+				//Use Translate??
 				if(Math.abs(xDist) < PUSH_DIST) dot.position.x -= xDist/2;
 				if(Math.abs(yDist) < PUSH_DIST) dot.position.y -= yDist/2;
 				//finally, check if the pushed dot is now in the goal
@@ -62,39 +78,25 @@ function onMouseMove(event) {
 		}
 	}
 }
+
 function onMouseDown(event) {
 	if(magnet.contains(event.point)) isBeingDragged = true;
 }
 
 function onMouseDrag(event) {
 	if(isBeingDragged) magnet.position = event.point;
-}
-function onMouseUp(event) {
 	if(magnet.contains(event.point)) {
-		isBeingDragged = false;
 		for(var i=0; i<NUM_ROWS; i++) {
 			for(var j=0; j<NUM_ROWS; j++) {
 				//For every dot in the grid...
 				var dot = grid[i][j];
-				console.log(magnet.hitTest(dot.position));
-				if(magnet.hitTest(dot.position, {
-					tolerance: 10,
-				})) {
-					dot.position += PUSH_DIST;
+				if(magnet.contains(dot.position)) {
+					dot.fillColor = "red";
 				}
 			}
 		}
 	}
 }
-
-/*
-function onFrame(event) {
-	for(var i=0; i<NUM_ROWS; i++) {
-		for(var j=0; j<NUM_ROWS; j++) {
-			//For every dot in the grid...
-			var dot = grid[i][j];
-			
-		}
-	}
+function onMouseUp(event) {
+	isBeingDragged = false;
 }
-*/
