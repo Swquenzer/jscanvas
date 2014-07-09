@@ -22,32 +22,34 @@ var grid = [];
 			    strokeWidth: STROKE_WIDTH,
 			    fillColor: '9dd5ea'
 			});
-			
+
 			//Offset grid so all dots are visible on screen
 			grid[i][j].position += DOT_RADIUS+STROKE_WIDTH;
 		}
 	}
 })(NUM_ROWS);
 
-window.test = function(strColor) {
-	for(var i=0; i < NUM_ROWS; i++) {
-		for(var j=0; j < NUM_ROWS; j++) {
-			//For every dot in the grid...
-			var dot = grid[i][j];
-			dot.strokeWidth = strColor;
-		}
-	}
-}
-
-var magnet = new Shape.Circle({
+var trashCan = new Shape.Circle({
 	center: view.center,
 	radius: 40,
 	strokeColor: 'black'
 });
 
+//Upon initialization, turn dots inside of trash red
+(function() {
+	for(var i=0, numRows = grid.length; i<numRows; i++) {
+		for(var j=0, numCols = grid[i].length; j<numCols; j++) {
+			var dot = grid[i][j];
+			if(trashCan.contains(dot.position)) {
+				dot.fillColor = "red";
+			}
+		}
+	}
+})();
+
 function onMouseMove(event) {
-	for(var i=0; i<NUM_ROWS; i++) {
-		for(var j=0; j<NUM_ROWS; j++) {
+	for(var i=0, numRows = grid.length; i<numRows; i++) {
+		for(var j=0, numCols = grid[i].length; j<numCols; j++) {
 			//For every dot in the grid...
 			var dot = grid[i][j];
 
@@ -70,7 +72,7 @@ function onMouseMove(event) {
 				if(Math.abs(xDist) < PUSH_DIST) dot.position.x -= xDist/2;
 				if(Math.abs(yDist) < PUSH_DIST) dot.position.y -= yDist/2;
 				//finally, check if the pushed dot is now in the goal
-				if(magnet.contains(dot.position)) {
+				if(trashCan.contains(dot.position)) {
 					dot.fillColor = "red";
 				}
 			}
@@ -79,17 +81,17 @@ function onMouseMove(event) {
 }
 
 function onMouseDown(event) {
-	if(magnet.contains(event.point)) isBeingDragged = true;
+	if(trashCan.contains(event.point)) isBeingDragged = true;
 }
 
 function onMouseDrag(event) {
-	if(isBeingDragged) magnet.position = event.point;
-	if(magnet.contains(event.point)) {
-		for(var i=0; i<NUM_ROWS; i++) {
-			for(var j=0; j<NUM_ROWS; j++) {
+	if(isBeingDragged) trashCan.position = event.point;
+	if(trashCan.contains(event.point)) {
+		for(var i=0, numRows = grid.length; i<numRows; i++) {
+			for(var j=0, numCols = grid[i].length; j<numCols; j++) {
 				//For every dot in the grid...
 				var dot = grid[i][j];
-				if(magnet.contains(dot.position)) {
+				if(trashCan.contains(dot.position)) {
 					dot.fillColor = "red";
 					dot.blendMode = "overlay";
 				}
@@ -97,6 +99,29 @@ function onMouseDrag(event) {
 		}
 	}
 }
+
 function onMouseUp(event) {
 	isBeingDragged = false;
+}
+
+window.removeStroke = function() {
+	for(var i=0, numRows = grid.length; i<numRows; i++) {
+		for(var j=0, numCols = grid[i].length; j<numCols; j++) {
+			//For every dot in the grid...
+			var dot = grid[i][j];
+			dot.strokeWidth = 0;
+		}
+	}
+}
+
+window.trashit = function() {
+	for(var i=0; i<grid.length; i++) {
+		for(var j=0; j<grid[i].length; j++) {
+			//For every dot in the grid...
+			var dot = grid[i][j];
+			if(trashCan.contains(dot.position)) {
+				console.log(dot.remove());
+			}
+		}
+	}
 }
