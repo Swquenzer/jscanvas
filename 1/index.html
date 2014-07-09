@@ -6,12 +6,33 @@
 <script type="text/javascript" src="js/paper.js"></script>
 <!-- Load external PaperScript and associate it with myCanvas -->
 <script type="text/paperscript" src="js/main.js" canvas="canvas"></script>
+<style>
+	h1 {
+		text-align: center;
+	}
+	canvas {
+		display: block;
+		border: 1px solid black;
+	}
+	.wrapper {
+		display: block;
+		text-align: center;
+	}
+	.center {
+		display: inline-block;
+	}
+</style>
 </head>
 <body>
 	<h1>Grid o' Dots</h1>
-	<canvas id="canvas" resize="true">
-		
-	</canvas>
-	<input type="button" value="something" onclick="test('blue');">
+	<div class="wrapper">
+		<span class="center">
+			<canvas id="canvas" height="500px" width="500px">
+				
+			</canvas>
+			<input type="button" value="Remove Stroke" onclick="test('blue');">
+			<input type="button" value="Take Out the Trash!" onclick="trashit();">
+		</span>
+	</div>
 </body>
 </html>

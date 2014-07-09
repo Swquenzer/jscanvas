@@ -1,12 +1,12 @@
 //Paperscript
 //Constants
-var SPACING = 20;
 var X_CENTER = view.viewSize.width/2;
 var Y_CENTER = view.viewSize.height/2;
-var NUM_ROWS = 25;
-var PUSH_DIST = 20 ;
+var PUSH_DIST = 20;
 var DOT_RADIUS = 10;
-var STROKE_WIDTH = 2;
+var SPACING = DOT_RADIUS*2; //Also diameter
+var NUM_ROWS = Math.floor(view.viewSize.width/SPACING);
+var STROKE_WIDTH = 1;
 var isBeingDragged = false;
 
 //Create Grid of dots
@@ -22,14 +22,14 @@ var grid = [];
 			    strokeWidth: STROKE_WIDTH,
 			    fillColor: '9dd5ea'
 			});
-
+			
 			//Offset grid so all dots are visible on screen
 			grid[i][j].position += DOT_RADIUS+STROKE_WIDTH;
 		}
 	}
 })(NUM_ROWS);
 
-function test(strColor) {
+window.test = function(strColor) {
 	for(var i=0; i < NUM_ROWS; i++) {
 		for(var j=0; j < NUM_ROWS; j++) {
 			//For every dot in the grid...
@@ -59,7 +59,6 @@ function onMouseMove(event) {
 			if((Math.abs(xDist) < PUSH_DIST) && (Math.abs(yDist) < PUSH_DIST)) {
 				//change color of dot
 				dot.strokeColor = "green";
-				console.log(dot.fillColor.toCSS(true));
 				if(dot.fillColor.toCSS(true) == "#9dd5ea") {
 					dot.fillColor = "a4ea9d";
 				} else {
@@ -92,6 +91,7 @@ function onMouseDrag(event) {
 				var dot = grid[i][j];
 				if(magnet.contains(dot.position)) {
 					dot.fillColor = "red";
+					dot.blendMode = "overlay";
 				}
 			}
 		}
