@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Trash It! | Stephen Quenzerq</title>
+<title>Template | Stephen Quenzer</title>
 <!-- Load the Paper.js library -->
-<script type="text/javascript" src="js/paper.js"></script>
-<!-- Load external PaperScript and associate it with myCanvas -->
+<script type="text/javascript" src="dist/paper-full.js"></script>
+<!-- Load external PaperScript and associate it with canvas -->
 <script type="text/paperscript" src="js/main.js" canvas="canvas"></script>
 <style>
 	h1, h2 {
@@ -24,15 +24,13 @@
 </style>
 </head>
 <body>
-	<h1>Trash It!</h1>
-	<h2>Move the dots into the circle to trash them!</h2>
+	<h1>Project Title!</h1>
+	<h2>Project descript or subtitle here...</h2>
 	<div class="wrapper">
 		<span class="center">
 			<canvas id="canvas" height="500px" width="500px">
-				
 			</canvas>
-			<input type="button" value="Remove Stroke" onclick="removeStroke();">
-			<input type="button" value="Take Out the Trash!" onclick="trashit();">
+			<input type="button" value="Connect a function in main.js using window.button()" onclick="button();">
 		</span>
 	</div>
 </body>

@@ -3,7 +3,7 @@
 var X_CENTER = view.viewSize.width/2;
 var Y_CENTER = view.viewSize.height/2;
 var PUSH_DIST = 20;
-var DOT_RADIUS = 10;
+var DOT_RADIUS = 9;
 var SPACING = DOT_RADIUS*2; //Also diameter
 var NUM_ROWS = Math.floor(view.viewSize.width/SPACING);
 var STROKE_WIDTH = 1;
