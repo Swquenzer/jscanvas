@@ -10,10 +10,14 @@ var settings = {
 	longGrassAmt: 10
 };
 var events = {
-	keyIsPressed: false
+	whichKey: null
 }
 
 var interactableElements = new Group(); //Implement this!
+
+function randomPlacement() {
+	return Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
+}
 
 var longGrass = new function() {
 	var group = new Group();
@@ -29,9 +33,8 @@ var longGrass = new function() {
 			//Place an instance of the grass shape object
 			var grass = grassSym.place();
 			//If a position is given, put grass there -- otherwise place randomly on screen
-			//console.log(Math.random()*100)
-			grass.position.x = Math.round(Math.random()*25)*settings.elementSize+settings.elementRad;
-			grass.position.y = Math.round(Math.random()*25)*settings.elementSize+settings.elementRad;
+			grass.position.x = randomPlacement();
+			grass.position.y = randomPlacement();
 			return grass;
 		},
 		add: function(position) {
@@ -54,6 +57,11 @@ var player = new function() {
 			for(var i=0, elements=longGrass.children; i<elements.length; i++) {
 				var element = elements[i];
 				if(element.bounds.intersects(player.bounds)) {
+					if(whichKey === 'left' || whichKey === 'right') {
+						element.position.y += settings.elementSize/5;
+					} else {
+						element.position.x += settings.elementSize/5;
+					}
 				}
 			}
 		},
@@ -93,15 +101,19 @@ function onKeyUp(event) {
 	//Keyboard
 	//Turn this shit into a switch statement
 	var distance = settings.elementSize;
-	console.log(distance);
+	
 	if(event.key == 'left') {
 		player.shape.position.x -= distance;
+		whichKey = event.key;
 	} else if(event.key == 'right') {
 		player.shape.position.x += distance;
+		whichKey = event.key;
 	} else if(event.key == 'up') {
 		player.shape.position.y -= distance;
+		whichKey = event.key;
 	} else if(event.key == 'down') {
 		player.shape.position.y += distance;
+		whichKey = event.key;
 	}
 }
 
