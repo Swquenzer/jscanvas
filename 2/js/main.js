@@ -7,8 +7,11 @@ var settings = {
 	//Grass
 	longGrassAmt: 10
 };
+var events = {
+	keyIsPressed: false
+}
 
-var interactableElements = Group(); //Implement this!
+var interactableElements = new Group(); //Implement this!
 
 var longGrass = new function() {
 	var group = new Group();
@@ -42,7 +45,14 @@ var player = new function() {
 		fillColor: 'blue'
 	});
 	return {
-		
+		checkCollisions: function() {
+			for(var i=0, elements=longGrass.children; i<elements.length; i++) {
+				var element = elements[i];
+				if(element.bounds.intersects(player.bounds)) {
+					console.log("whatup");
+				}
+			}
+		},
 		move: function(direction) {
 			switch(direction) {
 				case 'left':
@@ -62,18 +72,22 @@ var player = new function() {
 }
 
 function onFrame(event) {
-	if(Key.isDown('left')) {
+	player.checkCollisions();
+	//Keyboard
+	//Turn this shit into a switch statement
+	if(Key.isDown('left') && !keyIsPressed) {
 		player.move('left');
-	}
-	if(Key.isDown('right')) {
+		events.keyIsPressed = true;
+	} else if(Key.isDown('right') && !keyIsPressed) {
 		player.move('right');
-	}
-	if(Key.isDown('down')) {
+		events.keyIsPressed = true;
+	} else if(Key.isDown('down') && !keyIsPressed) {
 		player.move('down');
-	}
-	if(Key.isDown('up')) {
+		events.keyIsPressed = true;
+	} else if(Key.isDown('up') && !keyIsPressed) {
 		player.move('up');
-	}
+		events.keyIsPressed = true;
+	} else keyIsPressed = false;
 }
 
 function populate() {
