@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Framework Test | Stephen Quenzer</title>
+<!-- Load the Paper.js library -->
+<script type="text/javascript" src="dist/paper-full.js"></script>
+<!-- Load external PaperScript and associate it with canvas -->
+<script type="text/paperscript" src="js/main.js" canvas="canvas"></script>
+<style>
+	h1, h2 {
+		display: none;
+		text-align: center;
+	}
+	canvas {
+		display: block !important;
+		border: 0px solid black;
+	}
+	.wrapper {
+		display: block;
+		text-align: center;
+	}
+	.center {
+		display: inline-block;
+	}
+</style>
+</head>
+<body>
+	<h1>Framework Test</h1>
+	<h2>Adventure Time</h2>
+	<div class="wrapper">
+		<span class="center">
+			<canvas id="canvas" height="500px" width="500px">
+			</canvas>
+			<input type="button" value="Connect a function in main.js using window.button()" onclick="location.reload();">
+		</span>
+	</div>
+</body>
+</html>
