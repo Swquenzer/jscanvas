@@ -2,7 +2,9 @@
 //variables
 var settings = {
 	//General
+	//elementRad is often used as an element offset
 	elementRad: 10,
+	elementSize: 20,
 	//Player
 	//Grass
 	longGrassAmt: 10
@@ -27,7 +29,9 @@ var longGrass = new function() {
 			//Place an instance of the grass shape object
 			var grass = grassSym.place();
 			//If a position is given, put grass there -- otherwise place randomly on screen
-			grass.position = position ? position : Point.random()*view.size;
+			//console.log(Math.random()*100)
+			grass.position.x = Math.round(Math.random()*25)*settings.elementSize+settings.elementRad;
+			grass.position.y = Math.round(Math.random()*25)*settings.elementSize+settings.elementRad;
 			return grass;
 		},
 		add: function(position) {
@@ -45,11 +49,11 @@ var player = new function() {
 		fillColor: 'blue'
 	});
 	return {
+		shape: player,
 		checkCollisions: function() {
 			for(var i=0, elements=longGrass.children; i<elements.length; i++) {
 				var element = elements[i];
 				if(element.bounds.intersects(player.bounds)) {
-					console.log("whatup");
 				}
 			}
 		},
@@ -73,21 +77,6 @@ var player = new function() {
 
 function onFrame(event) {
 	player.checkCollisions();
-	//Keyboard
-	//Turn this shit into a switch statement
-	if(Key.isDown('left') && !keyIsPressed) {
-		player.move('left');
-		events.keyIsPressed = true;
-	} else if(Key.isDown('right') && !keyIsPressed) {
-		player.move('right');
-		events.keyIsPressed = true;
-	} else if(Key.isDown('down') && !keyIsPressed) {
-		player.move('down');
-		events.keyIsPressed = true;
-	} else if(Key.isDown('up') && !keyIsPressed) {
-		player.move('up');
-		events.keyIsPressed = true;
-	} else keyIsPressed = false;
 }
 
 function populate() {
@@ -98,6 +87,26 @@ function populate() {
 
 function run() {
 	populate();
+}
+
+function onKeyUp(event) {
+	//Keyboard
+	//Turn this shit into a switch statement
+	var distance = settings.elementSize;
+	console.log(distance);
+	if(event.key == 'left') {
+		player.shape.position.x -= distance;
+	} else if(event.key == 'right') {
+		player.shape.position.x += distance;
+	} else if(event.key == 'up') {
+		player.shape.position.y -= distance;
+	} else if(event.key == 'down') {
+		player.shape.position.y += distance;
+	}
+}
+
+function onKeyDown(event) {
+	return false;
 }
 
 run();
