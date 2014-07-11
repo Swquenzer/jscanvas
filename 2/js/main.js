@@ -33,8 +33,11 @@ var longGrass = new function() {
 			//Place an instance of the grass shape object
 			var grass = grassSym.place();
 			//If a position is given, put grass there -- otherwise place randomly on screen
-			grass.position.x = randomPlacement();
-			grass.position.y = randomPlacement();
+			var gx = randomPlacement();
+			var gy = randomPlacement();
+			grass.position.x = gx;
+			grass.position.y = gy;
+			grass.initialPosition = new Point(gx, gy);
 			return grass;
 		},
 		add: function(position) {
@@ -83,8 +86,26 @@ var player = new function() {
 	}
 }
 
+function beOriginal() {
+	var playerBounds = player.bounds;
+	for(var i=0; i<longGrass.children.length; i++) {
+		var child = longGrass.children[i];
+		if(child.position != child.initialPosition){
+			if(!player.shape.contains(child.initialPosition)) {
+				if(child.position.x != child.initialPosition.x)
+					child.position.x -= settings.elementSize/5;
+				else
+					child.position.y -= settings.elementSize/5;
+			}
+		}
+	}
+}
+
 function onFrame(event) {
 	player.checkCollisions();
+	//if grass is not in correct spot, use original position to pull it back
+	//START HERE
+	beOriginal();
 }
 
 function populate() {
