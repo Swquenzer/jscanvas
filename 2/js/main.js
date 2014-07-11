@@ -10,6 +10,7 @@ var settings = {
 	longGrassAmt: 100,
 	shortGrassAmt: 300
 };
+
 var events = {
 	whichKey: null
 }
@@ -34,10 +35,17 @@ var shortGrass = new function() {
 			//Place an instance of the grass shape object
 			var grass = grassSym.place();
 			//If a position is given, put grass there -- otherwise place randomly on screen
-			var gx = randomPlacement();
-			var gy = randomPlacement();
-			grass.position.x = gx;
-			grass.position.y = gy;
+			if(!position) {
+				var gx = randomPlacement();
+				var gy = randomPlacement();
+				grass.position.x = gx;
+				grass.position.y = gy;
+			} else {
+				var gx = position.x;
+				var gy = position.y;
+				grass.position.x = gx;
+				grass.position.y = gy;
+			}
 			return grass;
 		},
 		add: function(position) {
@@ -52,7 +60,8 @@ var longGrass = new function() {
 	allElements.addChild(group);
 	var shape = new Shape.Circle({
 		radius: settings.elementRad,
-		fillColor: 'green'
+		fillColor: 'green',
+		blendMode: 'multiply'
 	});
 	var grassSym = new Symbol(shape);
 	return {
@@ -62,10 +71,17 @@ var longGrass = new function() {
 			//Place an instance of the grass shape object
 			var grass = grassSym.place();
 			//If a position is given, put grass there -- otherwise place randomly on screen
-			var gx = randomPlacement();
-			var gy = randomPlacement();
-			grass.position.x = gx;
-			grass.position.y = gy;
+			if(!position) {
+				var gx = randomPlacement();
+				var gy = randomPlacement();
+				grass.position.x = gx;
+				grass.position.y = gy;
+			} else {
+				var gx = position.x;
+				var gy = position.y;
+				grass.position.x = gx;
+				grass.position.y = gy;
+			}
 			grass.initialPosition = new Point(gx, gy);
 			return grass;
 		},
@@ -81,7 +97,8 @@ var player = new function() {
 	var player = new Shape.Circle({
 		center: [settings.elementRad, settings.elementRad],
 		radius: settings.elementRad,
-		fillColor: 'blue'
+		fillColor: '494835',
+		strokeColor: 'white'
 	});
 	return {
 		shape: player,
@@ -161,14 +178,32 @@ function randomPlacement() {
 }
 */
 
-function populate() {
-	for(var i=0; i<settings.longGrassAmt; i++) {
-		longGrass.add();
-	}
-	for(var i=0; i<settings.shortGrassAmt; i++) {
-		shortGrass.add();
-	}
+var map = ["slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "lsssllllssllllslslsssllll",
+		   "slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "slslslslllllllslslsssllll",
+		   "slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "lsssllllssllllslslsssllll"];
 
+function populate() {
+	var posX = settings.elementRad;
+	var posY = settings.elementRad;
+
+	for(var i=0, len=map.length; i<len; i++) {
+		for(var j=0; j<map[i].length; j++) {
+			if(map[i].charAt(j) === 'l') {
+				longGrass.add(new Point(posX, posY));
+			} else if(map[i].charAt(j) === 's') {
+				shortGrass.add(new Point(posX, posY));
+			}
+			posX += settings.elementSize;
+		}
+		posX = settings.elementRad;
+		posY += settings.elementSize;
+	}
 }
 
 function run() {
