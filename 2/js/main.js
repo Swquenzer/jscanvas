@@ -26,7 +26,9 @@ var events = {
 	whichKey: null
 }
 
-var map = ["bbbbbbbbbbbbbbbbbbbbbbbbb",
+//starts at 0
+var currentLevel = 1;
+var map =[["bbbbbbbbbbbbbbbbbbbbbbbbb",		//Level 1
 		   "bsssllllssllllslslssslllb",
 		   "bllllsslslllllssssllllllb",
 		   "bblslslsllldddddlbbbbbbbb",
@@ -50,7 +52,33 @@ var map = ["bbbbbbbbbbbbbbbbbbbbbbbbb",
 		   "bllllssbblllllssssllllllb",
 		   "bllllssbblllllssssllllllb",
 		   "bsssllbbbsllllslslssslllb",
-		   "bbbbbbbbbbbbbbbbbbbbbbbbb"];
+		   "bbbbbbbbbbbbbbbbbbbbbbbbb"],
+		   ["bbbbbbbbbbbbbbbbbbbbbbbbb",	//Level 2
+		   "bsssllllssllllslslssslllb",
+		   "bllllsslslllllssssllllllb",
+		   "bblslslsllldddddlbbbbbbbb",
+		   "bbllbbbbbbbbbdbbbbbbbbblb",
+		   "bbbblslddsddddddddddllllb",
+		   "bbbbbblssssldddddslslsllb",
+		   "bsssllllssllllslslssslllb",
+		   "bllllsslslllddddssllllllb",
+		   "bllllsslsllllddsssllllllb",
+		   "bsssllllssllllbbbbbbbbbbb",
+		   "blllllssssllsslslslslsllb",
+		   "bllllsslslllllssssllllllb",
+		   "blslslsllllsssslslssslllb",
+		   "blllllssssllsslslslslsllb",
+		   "bllllsslslllllssssllllllb",
+		   "bllllsslslllllssssllllllb",
+		   "blllllssssllsslslslslsllb",
+		   "bllllsslslllllssssllllllb",
+		   "blslslslllllllslslssslllb",
+		   "blllllsbssllsslslslslsllb",
+		   "bllllssbblllllssssllllllb",
+		   "bllllssbblllllssssllllllb",
+		   "bsssllbbbsllllslslssslllb",
+		   "bbbbbbbbbbbbbbbbbbbbbbbbb"]];
+
 
 //Global Groups
 var allElements = new Group(); //Implement this!
@@ -216,6 +244,7 @@ function beOriginal() {
 	//Loop through all the longGrass objects
 	for(var i=0; i<longGrass.children.length; i++) {
 		var child = longGrass.children[i];
+		//Fix this up
 		//If grass is in incorrect position
 		if(child.position != child.initialPosition){
 			//And if the player is no long in the grass's initial position
@@ -234,8 +263,7 @@ function onFrame(event) {
 	//Check to see if player has collided with any interactable elements
 	player.checkCollisions();
 	//if grass is not in correct spot, use original position to pull it back
-	beOriginal();
-	
+	beOriginal();	
 }
 
 function populate() {
@@ -244,14 +272,15 @@ function populate() {
 	var posY = settings.elementRad;
 
 	//Loop through map and decide what to add
-	for(var i=0, len=map.length; i<len; i++) {
-		for(var j=0; j<map[i].length; j++) {
+	for(var i=0, len=map[currentLevel].length; i<len; i++) {
+		for(var j=0; j<map[currentLevel][i].length; j++) {
 			/* 
 				'l' := longGrass
 				's' := shortGrass
 				'g' := ground
+				'b' := boulder
 			*/
-			switch(map[i].charAt(j)) {
+			switch(map[currentLevel][i].charAt(j)) {
 				case 'l':
 					longGrass.add(new Point(posX, posY));
 					break;
