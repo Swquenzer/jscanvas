@@ -26,31 +26,31 @@ var events = {
 	whichKey: null
 }
 
-var map = ["slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "lsssllllssllllslslsssllll",
-		   "slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "slslslslllllllslslsssllll",
-		   "slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "lllllsslslllllsssslllllll",
-		   "lsssllllssllllslslsssllll",
-		   "slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "slslslslllllllslslsssllll",
-		   "slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "lllllsslslllllsssslllllll",
-		   "lsssllllssllllslslsssllll",
-		   "slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "slslslslllllllslslsssllll",
-		   "slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "lllllsslslllllsssslllllll",
-		   "lsssllllssllllslslsssllll",
-		   "slllllssssllsslslslslslll"];
+var map = ["bbbbbbbbbbbbbbbbbbbbbbbbb",
+		   "bsssllllssllllslslssslllb",
+		   "bllllsslslllllssssllllllb",
+		   "bblslslsllldddddlbbbbbbbb",
+		   "bblllllllddddddddddddlllb",
+		   "bbbblslddsddddddddddllllb",
+		   "bbbbbblssssldddddslslsllb",
+		   "bsssllllssllllslslssslllb",
+		   "bllllsslslllddddssllllllb",
+		   "bllllsslsllllddsssllllllb",
+		   "bsssllllssllllbbbbbbbbbbb",
+		   "blllllssssllsslslslslsllb",
+		   "bllllsslslllllssssllllllb",
+		   "blslslsllllsssslslssslllb",
+		   "blllllssssllsslslslslsllb",
+		   "bllllsslslllllssssllllllb",
+		   "bllllsslslllllssssllllllb",
+		   "blllllssssllsslslslslsllb",
+		   "bllllsslslllllssssllllllb",
+		   "blslslslllllllslslssslllb",
+		   "blllllsbssllsslslslslsllb",
+		   "bllllssbblllllssssllllllb",
+		   "bllllssbblllllssssllllllb",
+		   "bsssllbbbsllllslslssslllb",
+		   "bbbbbbbbbbbbbbbbbbbbbbbbb"];
 
 //Global Groups
 var allElements = new Group(); //Implement this!
@@ -59,7 +59,34 @@ var interactableElements = new Group();
 function randomPlacement() {
 	return Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
 }
+//boulder definition
+var boulder = new function() {
+	var group = new Group();
+	allElements.addChild(group);
+	interactableElements.addChild(group);
+	var shape = new Shape.Rectangle({
+		size: [settings.elementSize-1, settings.elementSize-1],
+		fillColor: '635f54',
+		strokeColor: 'white'
+	});
+	var boulderSym = new Symbol(shape);
+	return {
+		shape: shape,
+		children: group.children,
+		make: function(position) {
+			var boulder = boulderSym.place();
+			boulder.position = position;
+			boulder.bringToFront();
+			return boulder;
+		},
+		add: function(position) {
+			var boulder = this.make(position);
+			group.addChild(boulder);
+		}
+	}
+};
 
+//shortGrass definition
 var shortGrass = new function() {
 	var group = new Group();
 	allElements.addChild(group);
@@ -75,22 +102,41 @@ var shortGrass = new function() {
 			//Place an instance of the grass shape object
 			var grass = grassSym.place();
 			//If a position is given, put grass there -- otherwise place randomly on screen
-			if(!position) {
-				var gx = randomPlacement();
-				var gy = randomPlacement();
-				grass.position.x = gx;
-				grass.position.y = gy;
-			} else {
-				var gx = position.x;
-				var gy = position.y;
-				grass.position.x = gx;
-				grass.position.y = gy;
-			}
+			grass.position = position;
+			grass.initialPosition = position;
 			return grass;
 		},
 		add: function(position) {
 			var grass = this.make(position);
 			group.addChild(grass);
+		}
+	}
+}
+
+//Dirt Definition
+var dirt = new function() {
+	var group = new Group();
+	allElements.addChild(group);
+	var shape = new Shape.Circle({
+		radius: settings.elementRad,
+		fillColor: 'e0dc8b'
+	});
+	var dirtSym = new Symbol(shape);
+	return {
+		shape: shape,
+		children: group.children,
+		make: function(position) {
+			//Place an instance of the dirt shape object
+			//Place an instance of the grass shape object
+			var dirt = dirtSym.place();
+			//If a position is given, put grass there -- otherwise place randomly on screen
+			dirt.position = position;
+			dirt.initialPosition = position;
+			return dirt;
+		},
+		add: function(position) {
+			var dirt = this.make(position);
+			group.addChild(dirt);
 		}
 	}
 }
@@ -111,18 +157,8 @@ var longGrass = new function() {
 			//Place an instance of the grass shape object
 			var grass = grassSym.place();
 			//If a position is given, put grass there -- otherwise place randomly on screen
-			if(!position) {
-				var gx = randomPlacement();
-				var gy = randomPlacement();
-				grass.position.x = gx;
-				grass.position.y = gy;
-			} else {
-				var gx = position.x;
-				var gy = position.y;
-				grass.position.x = gx;
-				grass.position.y = gy;
-			}
-			grass.initialPosition = new Point(gx, gy);
+			grass.position = position;
+			grass.initialPosition = position;
 			return grass;
 		},
 		add: function(position) {
@@ -135,7 +171,8 @@ var longGrass = new function() {
 var player = new function() {
 	var group = new Group();
 	var player = new Shape.Circle({
-		center: [settings.elementRad, settings.elementRad],
+		//place player in 2x2 spot (so not on top of boulder)
+		center: [settings.elementRad*3, settings.elementRad*3],
 		radius: settings.elementRad,
 		fillColor: '494835',
 		strokeColor: 'white'
@@ -144,6 +181,7 @@ var player = new function() {
 		shape: player,
 		checkCollisions: function() {
 			//Change to allow other interactable elements
+			//Long Grass
 			for(var i=0, elements=longGrass.children; i<elements.length; i++) {
 				var element = elements[i];
 				if(element.bounds.intersects(player.bounds)) {
@@ -192,7 +230,6 @@ function beOriginal() {
 		}
 	}
 }
-
 function onFrame(event) {
 	//Check to see if player has collided with any interactable elements
 	player.checkCollisions();
@@ -221,6 +258,12 @@ function populate() {
 				case 's':
 					shortGrass.add(new Point(posX, posY));
 					break;
+				case 'd':
+					dirt.add(new Point(posX, posY));
+					break;
+				case 'b':
+					boulder.add(new Point(posX, posY));
+					break;
 			}
 			posX += settings.elementSize;
 		}
@@ -233,28 +276,42 @@ function run() {
 	populate();
 }
 
+function canMove(axis, dist) {
+	var px = new Point(player.shape.position.x + dist, player.shape.position.y);
+	var py = new Point(player.shape.position.x, player.shape.position.y + dist);
+	for(var i=0; i<boulder.children.length; i++) {
+		if(axis === 'x' && boulder.children[i].contains(px)) {
+			return false;
+		} else if(axis === 'y' && boulder.children[i].contains(py)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 function onKeyUp(event) {
 	//Keyboard
 	//Turn this shit into a switch statement
 	var distance = settings.elementSize;
 	events.whichKey = event.key;
-	switch(event.key) {
-		//events.whichKey = event.key;
-		case 'left':
-		player.shape.position.x -= distance;
-		break;
-		case 'right':
-		player.shape.position.x += distance;
-		break;
-		case 'up':
-		player.shape.position.y -= distance;
-		break;
-		case 'down':
-		player.shape.position.y += distance;
-		break;
-		default:
-		events.whichKey = null;
-	}
+	//if(canMove(event.key)) {
+		switch(event.key) {
+			case 'left':
+				if(canMove('x', -1*distance)) player.shape.position.x -= distance;
+				break;
+			case 'right':
+				if(canMove('x', distance)) player.shape.position.x += distance;
+				break;
+			case 'up':
+				if(canMove('y', -1*distance)) player.shape.position.y -= distance;
+				break;
+			case 'down':
+				if(canMove('y', distance)) player.shape.position.y += distance;
+				break;
+			default:
+				events.whichKey = null;
+		}
+	//}
 }
 
 function onKeyDown(event) {
