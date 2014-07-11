@@ -7,20 +7,49 @@ var settings = {
 	elementSize: 20,
 	//Player
 	//Grass
-	longGrassAmt: 10
+	longGrassAmt: 100,
+	shortGrassAmt: 300
 };
 var events = {
 	whichKey: null
 }
-
-var interactableElements = new Group(); //Implement this!
+var allElements = new Group(); //Implement this!
 
 function randomPlacement() {
 	return Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
 }
 
+var shortGrass = new function() {
+	var group = new Group();
+	allElements.addChild(group);
+	var shape = new Shape.Circle({
+		radius: settings.elementRad,
+		fillColor: '74c468'
+	});
+	var grassSym = new Symbol(shape);
+	return {
+		shape: shape,
+		children: group.children,
+		make: function(position) {
+			//Place an instance of the grass shape object
+			var grass = grassSym.place();
+			//If a position is given, put grass there -- otherwise place randomly on screen
+			var gx = randomPlacement();
+			var gy = randomPlacement();
+			grass.position.x = gx;
+			grass.position.y = gy;
+			return grass;
+		},
+		add: function(position) {
+			var grass = this.make(position);
+			group.addChild(grass);
+		}
+	}
+}
+
 var longGrass = new function() {
 	var group = new Group();
+	allElements.addChild(group);
 	var shape = new Shape.Circle({
 		radius: settings.elementRad,
 		fillColor: 'green'
@@ -88,10 +117,15 @@ var player = new function() {
 
 function beOriginal() {
 	var playerBounds = player.bounds;
+	//Loop through all the longGrass objects
 	for(var i=0; i<longGrass.children.length; i++) {
 		var child = longGrass.children[i];
+		//If grass is in incorrect position
 		if(child.position != child.initialPosition){
+			//And if the player is no long in the grass's initial position
 			if(!player.shape.contains(child.initialPosition)) {
+				//then decide which direction to move the grass back to its initial position
+				//In increments for animation
 				if(child.position.x != child.initialPosition.x)
 					child.position.x -= settings.elementSize/5;
 				else
@@ -108,10 +142,33 @@ function onFrame(event) {
 	beOriginal();
 }
 
+/*
+function randomPlacement() {
+	var point = new Point(1,1);
+	for(var i=0; i<allElements.children.length; i++) {
+		for(var j=0; j<allElements.children[i].children.length; j++) {
+			var element = allElements.children[i].children[j];
+			var randPos1 = Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
+			var randPos2 = Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
+			while(element.shape.contains(new Point(randPos1, randPos2)) {
+				randPos1 = Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
+				randPos2 = Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
+			}
+			point = new Point(randPos1, randPos2);
+		}
+	}
+	return point;
+}
+*/
+
 function populate() {
 	for(var i=0; i<settings.longGrassAmt; i++) {
 		longGrass.add();
 	}
+	for(var i=0; i<settings.shortGrassAmt; i++) {
+		shortGrass.add();
+	}
+
 }
 
 function run() {
