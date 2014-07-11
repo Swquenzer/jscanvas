@@ -1,20 +1,60 @@
+/*
+** Title: Adventure Time!
+** Author: Stephen Quenzer
+** Date Created: July 10, 2014
+** Description: A 2D top-down adventure game made using paperjs (paperscript)
+*/
+
 //Paperscript
 //variables
 var settings = {
 	//General
 	//elementRad is often used as an element offset
 	elementRad: 10,
+	//Must be twice elementRad size
 	elementSize: 20,
 	//Player
 	//Grass
 	longGrassAmt: 100,
-	shortGrassAmt: 300
+	shortGrassAmt: 300,
+	//Animation
+	// The higher the value, the slower the speed
+	animSpeed: 10
 };
 
 var events = {
 	whichKey: null
 }
+
+var map = ["slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "lsssllllssllllslslsssllll",
+		   "slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "slslslslllllllslslsssllll",
+		   "slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "lllllsslslllllsssslllllll",
+		   "lsssllllssllllslslsssllll",
+		   "slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "slslslslllllllslslsssllll",
+		   "slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "lllllsslslllllsssslllllll",
+		   "lsssllllssllllslslsssllll",
+		   "slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "slslslslllllllslslsssllll",
+		   "slllllssssllsslslslslslll",
+		   "lllllsslslllllsssslllllll",
+		   "lllllsslslllllsssslllllll",
+		   "lsssllllssllllslslsssllll",
+		   "slllllssssllsslslslslslll"];
+
+//Global Groups
 var allElements = new Group(); //Implement this!
+var interactableElements = new Group();
 
 function randomPlacement() {
 	return Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
@@ -103,13 +143,14 @@ var player = new function() {
 	return {
 		shape: player,
 		checkCollisions: function() {
+			//Change to allow other interactable elements
 			for(var i=0, elements=longGrass.children; i<elements.length; i++) {
 				var element = elements[i];
 				if(element.bounds.intersects(player.bounds)) {
-					if(whichKey === 'left' || whichKey === 'right') {
-						element.position.y += settings.elementSize/5;
+					if(events.whichKey === 'left' || events.whichKey === 'right') {
+						element.position.y += settings.elementSize/settings.animSpeed;
 					} else {
-						element.position.x += settings.elementSize/5;
+						element.position.x += settings.elementSize/settings.animSpeed;
 					}
 				}
 			}
@@ -144,60 +185,42 @@ function beOriginal() {
 				//then decide which direction to move the grass back to its initial position
 				//In increments for animation
 				if(child.position.x != child.initialPosition.x)
-					child.position.x -= settings.elementSize/5;
+					child.position.x -= settings.elementSize/settings.animSpeed;
 				else
-					child.position.y -= settings.elementSize/5;
+					child.position.y -= settings.elementSize/settings.animSpeed;
 			}
 		}
 	}
 }
 
 function onFrame(event) {
+	//Check to see if player has collided with any interactable elements
 	player.checkCollisions();
 	//if grass is not in correct spot, use original position to pull it back
-	//START HERE
 	beOriginal();
+	
 }
-
-/*
-function randomPlacement() {
-	var point = new Point(1,1);
-	for(var i=0; i<allElements.children.length; i++) {
-		for(var j=0; j<allElements.children[i].children.length; j++) {
-			var element = allElements.children[i].children[j];
-			var randPos1 = Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
-			var randPos2 = Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
-			while(element.shape.contains(new Point(randPos1, randPos2)) {
-				randPos1 = Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
-				randPos2 = Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
-			}
-			point = new Point(randPos1, randPos2);
-		}
-	}
-	return point;
-}
-*/
-
-var map = ["slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "lsssllllssllllslslsssllll",
-		   "slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "slslslslllllllslslsssllll",
-		   "slllllssssllsslslslslslll",
-		   "lllllsslslllllsssslllllll",
-		   "lsssllllssllllslslsssllll"];
 
 function populate() {
+	//Start placing elements at radius offset
 	var posX = settings.elementRad;
 	var posY = settings.elementRad;
 
+	//Loop through map and decide what to add
 	for(var i=0, len=map.length; i<len; i++) {
 		for(var j=0; j<map[i].length; j++) {
-			if(map[i].charAt(j) === 'l') {
-				longGrass.add(new Point(posX, posY));
-			} else if(map[i].charAt(j) === 's') {
-				shortGrass.add(new Point(posX, posY));
+			/* 
+				'l' := longGrass
+				's' := shortGrass
+				'g' := ground
+			*/
+			switch(map[i].charAt(j)) {
+				case 'l':
+					longGrass.add(new Point(posX, posY));
+					break;
+				case 's':
+					shortGrass.add(new Point(posX, posY));
+					break;
 			}
 			posX += settings.elementSize;
 		}
@@ -214,19 +237,23 @@ function onKeyUp(event) {
 	//Keyboard
 	//Turn this shit into a switch statement
 	var distance = settings.elementSize;
-	
-	if(event.key == 'left') {
+	events.whichKey = event.key;
+	switch(event.key) {
+		//events.whichKey = event.key;
+		case 'left':
 		player.shape.position.x -= distance;
-		whichKey = event.key;
-	} else if(event.key == 'right') {
+		break;
+		case 'right':
 		player.shape.position.x += distance;
-		whichKey = event.key;
-	} else if(event.key == 'up') {
+		break;
+		case 'up':
 		player.shape.position.y -= distance;
-		whichKey = event.key;
-	} else if(event.key == 'down') {
+		break;
+		case 'down':
 		player.shape.position.y += distance;
-		whichKey = event.key;
+		break;
+		default:
+		events.whichKey = null;
 	}
 }
 
