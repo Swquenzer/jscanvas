@@ -19,7 +19,9 @@ var settings = {
 	shortGrassAmt: 300,
 	//Animation
 	// The higher the value, the slower the speed
-	animSpeed: 10
+	animSpeed: 10,
+	animTiming: 60*2,
+	animInterval: 0
 };
 
 var map =[[
@@ -113,10 +115,11 @@ var magma = new function() {
 	var shape = new Shape.Circle({
 		radius: settings.elementRad,
 	});
+	//Create radient
 	shape.fillColor= {
 		gradient: {
 			radial: true,
-			stops: [['ffbd5b', 0.05], ['bc2d2d', 0.7], ['8e1f1f', 1]]
+			stops: [['ffe5a0', 0.05], ['bc2d2d', 0.7], ['8e1f1f', 1]]
 		},
 		origin: shape.position,
 		destination: shape.bounds.bottomCenter
@@ -134,6 +137,27 @@ var magma = new function() {
 		add: function(position) {
 			var magma = this.make(position);
 			group.addChild(magma);
+		},
+		bubble: function(time) {
+			if(Math.floor(time)%2 === 0) {
+				shape.fillColor= {
+					gradient: {
+						radial: true,
+						stops: [['ffe5a0', 0.05], ['bc2d2d', 0.7], ['8e1f1f', 1]]
+					},
+					origin: shape.position,
+					destination: shape.bounds.bottomCenter
+				}
+			} else {
+				shape.fillColor= {
+					gradient: {
+						radial: true,
+						stops: [['yellow', 0.05], ['red', 0.2], ['black', 1]]
+					},
+					origin: shape.position,
+					destination: shape.bounds.bottomCenter
+				}
+			}
 		}
 	};
 }
@@ -307,6 +331,7 @@ function populate() {
 				's' := shortGrass
 				'd' := dirt
 				'b' := boulder
+				'm' := magma
 			*/
 			switch(map[currentLevel][i].charAt(j)) {
 				case 'l':
@@ -353,11 +378,17 @@ function canMove(axis, dist) {
 	return true;
 }
 
+function updateInterval(event) {
+	//console.log(event.time);
+}
+
 function onFrame(event) {
+	//updateInterval(event);
 	//Check to see if player has collided with any interactable elements
 	player.checkCollisions();
 	//if grass is not in correct spot, use original position to pull it back
-	beOriginal();	
+	beOriginal();
+	magma.bubble(event.time);
 }
 
 function onKeyUp(event) {

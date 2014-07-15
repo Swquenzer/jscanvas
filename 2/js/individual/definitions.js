@@ -59,6 +59,27 @@ var magma = new function() {
 		add: function(position) {
 			var magma = this.make(position);
 			group.addChild(magma);
+		},
+		bubble: function(time) {
+			if(Math.floor(time)%2 === 0) {
+				shape.fillColor= {
+					gradient: {
+						radial: true,
+						stops: [['ffe5a0', 0.05], ['bc2d2d', 0.7], ['8e1f1f', 1]]
+					},
+					origin: shape.position,
+					destination: shape.bounds.bottomCenter
+				}
+			} else {
+				shape.fillColor= {
+					gradient: {
+						radial: true,
+						stops: [['yellow', 0.05], ['red', 0.2], ['black', 1]]
+					},
+					origin: shape.position,
+					destination: shape.bounds.bottomCenter
+				}
+			}
 		}
 	};
 }

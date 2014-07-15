@@ -19,5 +19,7 @@ var settings = {
 	shortGrassAmt: 300,
 	//Animation
 	// The higher the value, the slower the speed
-	animSpeed: 10
+	animSpeed: 10,
+	animTiming: 60*2,
+	animInterval: 0
 };

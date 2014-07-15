@@ -41,6 +41,7 @@ function populate() {
 				's' := shortGrass
 				'd' := dirt
 				'b' := boulder
+				'm' := magma
 			*/
 			switch(map[currentLevel][i].charAt(j)) {
 				case 'l':
@@ -87,11 +88,17 @@ function canMove(axis, dist) {
 	return true;
 }
 
+function updateInterval(event) {
+	//console.log(event.time);
+}
+
 function onFrame(event) {
+	//updateInterval(event);
 	//Check to see if player has collided with any interactable elements
 	player.checkCollisions();
 	//if grass is not in correct spot, use original position to pull it back
-	beOriginal();	
+	beOriginal();
+	magma.bubble(event.time);
 }
 
 function onKeyUp(event) {

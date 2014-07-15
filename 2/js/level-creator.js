@@ -9,7 +9,8 @@ var colors = {
 	d: "e0dc8b",
 	s: "74c468",
 	l: "378921",
-	b: "635f54"
+	b: "635f54",
+	m: "bc2d2d"
 };
 //Determine if mouse is pressed, if so mouseDown == true
 var mouseDown = false;
@@ -81,6 +82,8 @@ window.build = function() {
 				map[i] = map[i].replaceAt(j, "l");
 			} else if(col === colors["b"]) {
 				map[i] = map[i].replaceAt(j, "b");
+			} else if(col === colors["m"]) {
+				map[i] = map[i].replaceAt(j, "m");
 			}
 		}
 	}
