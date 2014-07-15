@@ -55,6 +55,9 @@ function populate() {
 				case 'b':
 					boulder.add(new Point(posX, posY));
 					break;
+				case 'm':
+					magma.add(new Point(posX, posY));
+					break;
 			}
 			posX += settings.elementSize;
 		}

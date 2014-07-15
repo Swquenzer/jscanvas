@@ -50,29 +50,29 @@ var map =[[
 "bbbbbbbbbbbbbbbbbbbbbbbbb"],
 
 ["bbbbbbbbbbbbbbbbbbbbbbbbb",
-"bssssssdsdsdddddddddbbbbb",
-"bsssssssddssddddddddbbbbb",
-"bbsddddddddddsdsdddddddbb",
-"bbssddddsddddddsddddddddb",
-"bbsdddddddsdddddddddddddb",
-"bbdddddddsddddddddddddddb",
-"bdbddddbbbsdddsdddddddddb",
-"bbbbbbbbbbbbssddddddddddb",
-"bbbbbbbdddbbdsddddddddddb",
-"bbbbdddsdsbbdsddddddddddb",
-"bdsddddsddbddddsddddddddb",
-"bdddddddddbdddddsdddddddb",
-"bddddddddddddddsdsdddddbb",
-"bddddddddddddddddddddddbb",
-"bddddddddddddddddddddddbb",
-"bdddddddddddddddddddddbbb",
-"bdddddddddddddddddddbbbbb",
-"bddddddddddddddddddddbbbb",
-"bdddddddddddddddddddbbllb",
-"bddddddddddddldldlldbbllb",
-"bdddddddddddddddddbbbbllb",
-"bddddddlldllllllllbbblllb",
-"blllllllllllllllllllllllb",
+"bsssssssssssssddddddddddb",
+"bssssssssdddddddddddddddb",
+"bsssssddddddddddddddddddb",
+"bsssddddddddddddddddddddb",
+"bsssddddllllllllldddddddb",
+"bssddddlllllllllllldddddb",
+"bssdddllllssssssllldddddb",
+"bllllllllsssssssssllddddb",
+"blllllllssssssssssllddddb",
+"blllllllsssbbbbsssllddddb",
+"blllllllssbbbbbbssllddddb",
+"blllllllssbbbbbbssllddddb",
+"blllllllsssbbbbsssllddddb",
+"bssdddllssssssssssllddddb",
+"bssddddllsssssssslllddddb",
+"bsssddddllllllllllldddddb",
+"bsssdddddlllllllllddddddb",
+"bsssddddddddddddddddddddb",
+"bssssdddddddddddddddddddb",
+"bssssddddddddmmmmdddddddb",
+"bssssdddddddddddddddddddb",
+"bssssssssdddddddddddddddb",
+"bsssssssssssssssssssssssb",
 "bbbbbbbbbbbbbbbbbbbbbbbbb"]];
 
 //Global Groups
@@ -105,6 +105,38 @@ var boulder = new function() {
 		}
 	}
 };
+
+var magma = new function() {
+	var group = new Group();
+	allElements.addChild(group);
+	interactableElements.addChild(group);
+	var shape = new Shape.Circle({
+		radius: settings.elementRad,
+	});
+	shape.fillColor= {
+		gradient: {
+			radial: true,
+			stops: [['ffe5a0', 0.05], ['bc2d2d', 0.7], ['8e1f1f', 1]]
+		},
+		origin: shape.position,
+		destination: shape.bounds.bottomCenter
+	}
+	var magmaSym = new Symbol(shape);
+	return {
+		shape: shape,
+		children: group.children,
+		make: function(position) {
+			var magma = magmaSym.place();
+			magma.position = position;
+			magma.bringToFront();
+			return magma;
+		},
+		add: function(position) {
+			var magma = this.make(position);
+			group.addChild(magma);
+		}
+	};
+}
 
 //Short Grass definition
 var shortGrass = new function() {
@@ -288,6 +320,9 @@ function populate() {
 					break;
 				case 'b':
 					boulder.add(new Point(posX, posY));
+					break;
+				case 'm':
+					magma.add(new Point(posX, posY));
 					break;
 			}
 			posX += settings.elementSize;

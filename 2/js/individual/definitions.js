@@ -30,6 +30,39 @@ var boulder = new function() {
 	}
 };
 
+var magma = new function() {
+	var group = new Group();
+	allElements.addChild(group);
+	interactableElements.addChild(group);
+	var shape = new Shape.Circle({
+		radius: settings.elementRad,
+	});
+	//Create radient
+	shape.fillColor= {
+		gradient: {
+			radial: true,
+			stops: [['ffe5a0', 0.05], ['bc2d2d', 0.7], ['8e1f1f', 1]]
+		},
+		origin: shape.position,
+		destination: shape.bounds.bottomCenter
+	}
+	var magmaSym = new Symbol(shape);
+	return {
+		shape: shape,
+		children: group.children,
+		make: function(position) {
+			var magma = magmaSym.place();
+			magma.position = position;
+			magma.bringToFront();
+			return magma;
+		},
+		add: function(position) {
+			var magma = this.make(position);
+			group.addChild(magma);
+		}
+	};
+}
+
 //Short Grass definition
 var shortGrass = new function() {
 	var group = new Group();
