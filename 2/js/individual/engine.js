@@ -126,4 +126,7 @@ function onKeyUp(event) {
 	//}
 }
 
+console.log(interactableElements.children[0].children[0]);
+console.log(interactableElements.children[1].children[0]);
+
 run();

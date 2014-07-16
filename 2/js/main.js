@@ -114,6 +114,7 @@ var magma = new function() {
 	interactableElements.addChild(group);
 	var shape = new Shape.Circle({
 		radius: settings.elementRad,
+		data: "magma"
 	});
 	//Create radient
 	shape.fillColor= {
@@ -221,10 +222,12 @@ var dirt = new function() {
 var longGrass = new function() {
 	var group = new Group();
 	allElements.addChild(group);
+	interactableElements.addChild(group);
 	var shape = new Shape.Circle({
 		radius: settings.elementRad,
 		fillColor: 'green',
-		blendMode: 'multiply'
+		blendMode: 'multiply',
+		data: "longGrass"
 	});
 	var grassSym = new Symbol(shape);
 	return {
@@ -244,7 +247,7 @@ var longGrass = new function() {
 		}
 	}
 }
-
+var a = true;
 //Player definition
 var player = new function() {
 	var group = new Group();
@@ -257,9 +260,29 @@ var player = new function() {
 	});
 	return {
 		shape: player,
+		group: group,
 		checkCollisions: function() {
 			//Change to allow other interactable elements
 			//Long Grass
+			for(var i=0; i<interactableElements.children.length; i++) {
+				for(var j=0; j<interactableElements.children[i].children.length; j++) {
+					//e == longGrass || magma, etc
+					var element = interactableElements.children[i].children[j];
+					//if(a) {console.log(element._symbol._definition._data); a=true;}
+					if(element.bounds.intersects(player.bounds)) {
+						if(element._symbol._definition._data == "longGrass") {
+							if(events.whichKey === 'left' || events.whichKey === 'right') {
+								element.position.y += settings.elementSize/settings.animSpeed;
+							} else {
+								element.position.x += settings.elementSize/settings.animSpeed;
+							}
+						} else if(element._symbol._definition._data == "magma") {
+							player.position = new Point(settings.elementRad*3, settings.elementRad*3);
+						}
+					}
+				}
+			}
+			/*
 			for(var i=0, elements=longGrass.children; i<elements.length; i++) {
 				var element = elements[i];
 				if(element.bounds.intersects(player.bounds)) {
@@ -269,7 +292,7 @@ var player = new function() {
 						element.position.x += settings.elementSize/settings.animSpeed;
 					}
 				}
-			}
+			}*/
 		},
 		move: function(direction) {
 			switch(direction) {
@@ -415,5 +438,8 @@ function onKeyUp(event) {
 		}
 	//}
 }
+
+console.log(interactableElements.children[0].children[0]);
+console.log(interactableElements.children[1].children[0]);
 
 run();
