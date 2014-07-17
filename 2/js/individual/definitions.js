@@ -236,7 +236,7 @@ var player = new function() {
 				player.position = settings.startingPoint;
 				livesHeader.content = lives;
 			} else  {
-				console.log(player.remove());
+				//console.log(player.remove());
 				gameOver();
 			};
 		}

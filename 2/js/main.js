@@ -64,7 +64,7 @@ var map =[[
 "bdddddddddddddddddddddddb",
 "bdddddddddddddddddddddddb",
 "bdddddddddddddddddddddddb",
-"mmddddddddddddddddddddddb",
+"bmddddddddddddddddddddddb",
 "bmddddddddddddddddddddddb",
 "bmmddddddddddddddddddmddb",
 "bdmmmddddddddddddddddmmdb",
@@ -317,7 +317,7 @@ var player = new function() {
 				player.position = settings.startingPoint;
 				livesHeader.content = lives;
 			} else  {
-				console.log(player.remove());
+				//console.log(player.remove());
 				gameOver();
 			};
 		}
@@ -453,35 +453,52 @@ function onKeyUp(event) {
 	//Turn this shit into a switch statement
 	var distance = settings.elementSize;
 	events.whichKey = event.key;
-	//if(canMove(event.key)) {
-		switch(event.key) {
-			case 'left':
-				if(canMove('x', -1*distance)) player.shape.position.x -= distance;
-				break;
-			case 'right':
-				if(canMove('x', distance)) player.shape.position.x += distance;
-				break;
-			case 'up':
-				if(canMove('y', -1*distance)) player.shape.position.y -= distance;
-				break;
-			case 'down':
-				if(canMove('y', distance)) player.shape.position.y += distance;
-				break;
-			default:
-				events.whichKey = null;
-		}
-	//}
+	switch(event.key) {
+		case 'left':
+			if(canMove('x', -1*distance)) player.shape.position.x -= distance;
+			break;
+		case 'right':
+			if(canMove('x', distance)) player.shape.position.x += distance;
+			break;
+		case 'up':
+			if(canMove('y', -1*distance)) player.shape.position.y -= distance;
+			break;
+		case 'down':
+			if(canMove('y', distance)) player.shape.position.y += distance;
+			break;
+		default:
+			events.whichKey = null;
+	}
 }
-console.log(view.size);
+var overlay = new Shape.Rectangle({
+	from: [20, 20],
+    to: view.size-20,
+	fillColor: 'black',
+	opacity: 0,
+	visible: false
+});
+var gameOverText = new PointText({
+	point: [30, view.center.y],
+	strokeColor: 'white',
+    fontFamily: 'Courier New',
+    fontWeight: 'bold',
+    fontSize: 72,
+    content: 'Game Over!',
+    visible: false
+});
 function gameOver() {
 	lives = 0;
-	var overlay = new Shape.Rectangle({
-		from: [20, 20],
-	    to: view.size-20,
-		fillColor: 'black',
-		opacity: .3
-		//fillColor.alpha: .7
-	});
+	var textReady = false;
+	overlay.visible = true;
+
+	overlay.onFrame = function(event) {
+		if(overlay.opacity < 1) {
+			overlay.opacity += .02;
+		} else {
+			gameOverText.visible = true;
+		}
+	}
+	//if(overlay.opacity === .7)
 }
 
 function run() {
