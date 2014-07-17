@@ -3,6 +3,17 @@
 var allElements = new Group(); //Implement this!
 var interactableElements = new Group();
 
+var lives = 3;
+var livesHeader = new PointText({
+	point: settings.livesText,
+	fillColor: 'black',
+    fontFamily: 'Courier New',
+    fontWeight: 'bold',
+    fontSize: 25,
+    visible: false,
+    content: lives
+});
+
 //Boulder definition
 var boulder = new function() {
 	var group = new Group();
@@ -10,7 +21,7 @@ var boulder = new function() {
 	interactableElements.addChild(group);
 	var shape = new Shape.Rectangle({
 		size: [settings.elementSize-1, settings.elementSize-1],
-		fillColor: '635f54',
+		fillColor: '#635f54',
 		strokeColor: 'white'
 	});
 	var boulderSym = new Symbol(shape);
@@ -42,7 +53,7 @@ var magma = new function() {
 	shape.fillColor= {
 		gradient: {
 			radial: true,
-			stops: [['ffe5a0', 0.05], ['bc2d2d', 0.7], ['8e1f1f', 1]]
+			stops: [['#ffe5a0', 0.05], ['#bc2d2d', 0.7], ['#8e1f1f', 1]]
 		},
 		origin: shape.position,
 		destination: shape.bounds.bottomCenter
@@ -66,7 +77,7 @@ var magma = new function() {
 				shape.fillColor= {
 					gradient: {
 						radial: true,
-						stops: [['ffe5a0', 0.05], ['bc2d2d', 0.7], ['8e1f1f', 1]]
+						stops: [['#ffe5a0', 0.05], ['#bc2d2d', 0.7], ['#8e1f1f', 1]]
 					},
 					origin: shape.position,
 					destination: shape.bounds.bottomCenter
@@ -91,7 +102,7 @@ var shortGrass = new function() {
 	allElements.addChild(group);
 	var shape = new Shape.Circle({
 		radius: settings.elementRad,
-		fillColor: '74c468'
+		fillColor: '#74c468'
 	});
 	var grassSym = new Symbol(shape);
 	return {
@@ -118,7 +129,7 @@ var dirt = new function() {
 	allElements.addChild(group);
 	var shape = new Shape.Circle({
 		radius: settings.elementRad,
-		fillColor: 'e0dc8b'
+		fillColor: '#e0dc8b'
 	});
 	var dirtSym = new Symbol(shape);
 	return {
@@ -147,7 +158,7 @@ var longGrass = new function() {
 	interactableElements.addChild(group);
 	var shape = new Shape.Circle({
 		radius: settings.elementRad,
-		fillColor: 'green',
+		fillColor: '#408e26',
 		blendMode: 'multiply',
 		data: "longGrass"
 	});
@@ -169,15 +180,15 @@ var longGrass = new function() {
 		}
 	}
 }
-var a = true;
+
 //Player definition
 var player = new function() {
 	var group = new Group();
 	var player = new Shape.Circle({
 		//place player in 2x2 spot (so not on top of boulder)
-		center: [settings.elementRad*3, settings.elementRad*3],
+		center: settings.startingPoint,
 		radius: settings.elementRad,
-		fillColor: '494835',
+		fillColor: '#494835',
 		strokeColor: 'white'
 	});
 	return {
@@ -190,7 +201,6 @@ var player = new function() {
 				for(var j=0; j<interactableElements.children[i].children.length; j++) {
 					//e == longGrass || magma, etc
 					var element = interactableElements.children[i].children[j];
-					//if(a) {console.log(element._symbol._definition._data); a=true;}
 					if(element.bounds.intersects(player.bounds)) {
 						if(element._symbol._definition._data == "longGrass") {
 							if(events.whichKey === 'left' || events.whichKey === 'right') {
@@ -199,22 +209,11 @@ var player = new function() {
 								element.position.x += settings.elementSize/settings.animSpeed;
 							}
 						} else if(element._symbol._definition._data == "magma") {
-							player.position = new Point(settings.elementRad*3, settings.elementRad*3);
+							this.die();
 						}
 					}
 				}
 			}
-			/*
-			for(var i=0, elements=longGrass.children; i<elements.length; i++) {
-				var element = elements[i];
-				if(element.bounds.intersects(player.bounds)) {
-					if(events.whichKey === 'left' || events.whichKey === 'right') {
-						element.position.y += settings.elementSize/settings.animSpeed;
-					} else {
-						element.position.x += settings.elementSize/settings.animSpeed;
-					}
-				}
-			}*/
 		},
 		move: function(direction) {
 			switch(direction) {
@@ -230,6 +229,36 @@ var player = new function() {
 				case 'down':
 					player.position.y += 1;
 			}
+		},
+		die: function() {
+			if(lives > 1) {
+				lives--;
+				player.position = settings.startingPoint;
+				livesHeader.content = lives;
+			} else  {
+				console.log(player.remove());
+				gameOver();
+			};
 		}
 	}
 }
+
+/*
+var textHeaders = {
+	text: new PointText({
+		point: [30,30],
+		fillColor: 'black',
+	    fontFamily: 'Courier New',
+	    fontWeight: 'bold',
+	    fontSize: 25,
+	    content: lives
+	}),
+	//Initialize Lives Header
+	create: function() {
+		return this.text;
+	},
+	updateLives: function(update) {
+		this.text.content = lives;
+	}
+}
+*/

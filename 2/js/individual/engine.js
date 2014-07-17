@@ -1,7 +1,7 @@
 
 var events = {
 	whichKey: null
-}
+};
 
 //starts at 0
 var currentLevel = 1;
@@ -71,21 +71,20 @@ function randomPlacement() {
 	return Math.round(Math.random()*(view.size.width/settings.elementSize))*settings.elementSize+settings.elementRad;
 }
 
-function run() {
-	populate();
-}
-
 function canMove(axis, dist) {
-	var px = new Point(player.shape.position.x + dist, player.shape.position.y);
-	var py = new Point(player.shape.position.x, player.shape.position.y + dist);
-	for(var i=0; i<boulder.children.length; i++) {
-		if(axis === 'x' && boulder.children[i].contains(px)) {
-			return false;
-		} else if(axis === 'y' && boulder.children[i].contains(py)) {
-			return false;
+	if(lives > 0) {
+		var px = new Point(player.shape.position.x + dist, player.shape.position.y);
+		var py = new Point(player.shape.position.x, player.shape.position.y + dist);
+		for(var i=0; i<boulder.children.length; i++) {
+			if(axis === 'x' && boulder.children[i].contains(px)) {
+				return false;
+			} else if(axis === 'y' && boulder.children[i].contains(py)) {
+				return false;
+			}
 		}
+		return true;
 	}
-	return true;
+	else return false;
 }
 
 function updateInterval(event) {
@@ -99,6 +98,9 @@ function onFrame(event) {
 	//if grass is not in correct spot, use original position to pull it back
 	beOriginal();
 	magma.bubble(event.time);
+	if(Key.isDown('z')) {
+		livesHeader.visible = true;
+	} else livesHeader.visible = false;
 }
 
 function onKeyUp(event) {
@@ -125,8 +127,20 @@ function onKeyUp(event) {
 		}
 	//}
 }
+console.log(view.size);
+function gameOver() {
+	lives = 0;
+	var overlay = new Shape.Rectangle({
+		from: [20, 20],
+	    to: view.size-20,
+		fillColor: 'black',
+		opacity: .3
+		//fillColor.alpha: .7
+	});
+}
 
-console.log(interactableElements.children[0].children[0]);
-console.log(interactableElements.children[1].children[0]);
+function run() {
+	populate();
+}
 
 run();

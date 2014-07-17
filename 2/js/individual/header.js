@@ -14,6 +14,7 @@ var settings = {
 	//Must be twice elementRad size
 	elementSize: 20,
 	//Player
+	startingPoint: new Point(30, 30),
 	//Grass
 	longGrassAmt: 100,
 	shortGrassAmt: 300,
@@ -21,5 +22,7 @@ var settings = {
 	// The higher the value, the slower the speed
 	animSpeed: 10,
 	animTiming: 60*2,
-	animInterval: 0
+	animInterval: 0,
+	//Text
+	livesText: new Point(300,20)
 };
