@@ -28,6 +28,7 @@ var boulder = new function() {
 	return {
 		shape: shape,
 		children: group.children,
+		strength: 5,
 		make: function(position) {
 			var boulder = boulderSym.place();
 			boulder.position = position;
@@ -37,6 +38,9 @@ var boulder = new function() {
 		add: function(position) {
 			var boulder = this.make(position);
 			group.addChild(boulder);
+		},
+		hit: function() {
+			this.strength--;
 		}
 	}
 };
@@ -180,7 +184,7 @@ var longGrass = new function() {
 		}
 	}
 }
-
+var bullets = [];
 //Player definition
 var player = new function() {
 	var group = new Group();
@@ -229,6 +233,15 @@ var player = new function() {
 				case 'down':
 					player.position.y += 1;
 			}
+		},
+		shoot: function() {
+			var bullet = new Shape.Circle({
+				center: this.shape.position,
+				radius: 3,
+				fillColor: 'black',
+				data: events.whichKey
+			});
+			bullets.push(bullet);
 		},
 		die: function() {
 			if(lives > 1) {

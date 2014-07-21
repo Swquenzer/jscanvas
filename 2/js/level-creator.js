@@ -6,11 +6,11 @@ var tiles = [];
 
 var currentElement = "s";
 var colors = {
-	d: "e0dc8b",
-	s: "74c468",
-	l: "378921",
-	b: "635f54",
-	m: "bc2d2d"
+	d: "#e0dc8b",
+	s: "#74c468",
+	l: "#378921",
+	b: "#635f54",
+	m: "#bc2d2d"
 };
 //Determine if mouse is pressed, if so mouseDown == true
 var mouseDown = false;
@@ -73,7 +73,8 @@ window.build = function() {
 	for(var i=0; i<MAP_SIZE; i++) {
 		for(var j=0; j<MAP_SIZE; j++) {
 			var col = tiles[i][j].fillColor.toCSS(true);
-			col = col.slice(1);
+			//col = col.slice(1);
+			//console.log(col);
 			if(col === colors["d"]) {
 				map[i] = map[i].replaceAt(j, "d");
 			} else if(col === colors["s"]) {

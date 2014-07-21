@@ -26,3 +26,7 @@ var settings = {
 	//Text
 	livesText: new Point(300,20)
 };
+
+var events = {
+	whichKey: null
+};

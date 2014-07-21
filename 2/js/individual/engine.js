@@ -1,7 +1,4 @@
 
-var events = {
-	whichKey: null
-};
 
 //starts at 0
 var currentLevel = 1;
@@ -101,28 +98,59 @@ function onFrame(event) {
 	if(Key.isDown('z')) {
 		livesHeader.visible = true;
 	} else livesHeader.visible = false;
+	//check to see if any bullets exist. If so, animate to nearest collidable object
+	if(bullets.length !== 0) {
+		bullets.forEach(function(bullet, index) {
+			boulder.children.forEach(function(boulder) {
+				if(bullet.bounds.intersects(boulder.bounds)) {
+					bullet.remove();
+					bullets.splice(index, 1);
+				}
+			});
+			switch(bullet._data) {
+				case 'left':
+					bullet.position.x -= 3;
+					break;
+				case 'right':
+					bullet.position.x += 3;
+					break;
+				case 'up':
+					bullet.position.y -= 3;
+					break;
+				case 'down':
+					bullet.position.y += 3;
+					break;
+			}
+		});
+	}
 }
 
 function onKeyUp(event) {
 	//Keyboard
 	//Turn this shit into a switch statement
 	var distance = settings.elementSize;
-	events.whichKey = event.key;
 	switch(event.key) {
 		case 'left':
 			if(canMove('x', -1*distance)) player.shape.position.x -= distance;
+			events.whichKey = event.key;
 			break;
 		case 'right':
 			if(canMove('x', distance)) player.shape.position.x += distance;
+			events.whichKey = event.key;
 			break;
 		case 'up':
 			if(canMove('y', -1*distance)) player.shape.position.y -= distance;
+			events.whichKey = event.key;
 			break;
 		case 'down':
 			if(canMove('y', distance)) player.shape.position.y += distance;
+			events.whichKey = event.key;
+			break;
+		case 'space':
+			player.shoot();
 			break;
 		default:
-			events.whichKey = null;
+			//events.whichKey = null;
 	}
 }
 var overlay = new Shape.Rectangle({
