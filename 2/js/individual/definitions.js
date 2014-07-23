@@ -14,6 +14,7 @@ var livesHeader = new PointText({
     content: lives
 });
 
+var boulderHits = [];
 //Boulder definition
 var boulder = new function() {
 	var group = new Group();
@@ -28,7 +29,7 @@ var boulder = new function() {
 	return {
 		shape: shape,
 		children: group.children,
-		strength: 5,
+		strength: 4,
 		make: function(position) {
 			var boulder = boulderSym.place();
 			boulder.position = position;
@@ -39,9 +40,6 @@ var boulder = new function() {
 			var boulder = this.make(position);
 			group.addChild(boulder);
 		},
-		hit: function() {
-			this.strength--;
-		}
 	}
 };
 

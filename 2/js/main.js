@@ -99,6 +99,7 @@ var livesHeader = new PointText({
     content: lives
 });
 
+var boulderHits = [];
 //Boulder definition
 var boulder = new function() {
 	var group = new Group();
@@ -113,7 +114,7 @@ var boulder = new function() {
 	return {
 		shape: shape,
 		children: group.children,
-		strength: 5,
+		strength: 4,
 		make: function(position) {
 			var boulder = boulderSym.place();
 			boulder.position = position;
@@ -124,9 +125,6 @@ var boulder = new function() {
 			var boulder = this.make(position);
 			group.addChild(boulder);
 		},
-		hit: function() {
-			this.strength--;
-		}
 	}
 };
 
@@ -467,6 +465,14 @@ function onFrame(event) {
 				if(bullet.bounds.intersects(boulder.bounds)) {
 					bullet.remove();
 					bullets.splice(index, 1);
+					//console.log(boulderEl);
+					//console.log(boulder.strength--)
+					console.log(boulder._data);
+					//boulder._symbol._definition._data.strength--;
+					if(boulder._symbol._definition._data.strength <= 0) {
+						boulder.remove();
+					}
+					
 				}
 			});
 			switch(bullet._data) {

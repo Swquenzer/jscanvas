@@ -105,6 +105,11 @@ function onFrame(event) {
 				if(bullet.bounds.intersects(boulder.bounds)) {
 					bullet.remove();
 					bullets.splice(index, 1);
+					boulder._symbol._definition._data.strength--;
+					if(boulder._symbol._definition._data.strength <= 0) {
+						boulder.remove();
+					}
+					
 				}
 			});
 			switch(bullet._data) {

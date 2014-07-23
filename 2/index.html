@@ -7,6 +7,9 @@
 <!-- Load external PaperScript and associate it with canvas -->
 <script type="text/paperscript" src="js/main.js" canvas="canvas"></script>
 <style>
+	body {
+		background: beige;
+	}
 	h1, h2 {
 		display: none;
 		text-align: center;
@@ -22,6 +25,17 @@
 	}
 	.center {
 		display: inline-block;
+		padding: 5px 30px 15px;
+		background: white;
+		border: 1px solid gray;
+	}
+	input {
+		display: inline-block;
+		margin-top: 10px;
+		padding: 20px;
+		font-size: 18px;
+		font-weight: 700;
+		border: 0;
 	}
 </style>
 </head>
@@ -30,9 +44,9 @@
 	<h2>Adventure Time</h2>
 	<div class="wrapper">
 		<span class="center">
+			<input type="button" value="Refresh" onclick="location.reload();">
 			<canvas id="canvas" height="500px" width="500px">
 			</canvas>
-			<input type="button" value="Connect a function in main.js using window.button()" onclick="location.reload();">
 		</span>
 	</div>
 </body>

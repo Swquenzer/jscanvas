@@ -113,7 +113,7 @@ var boulder = new function() {
 	return {
 		shape: shape,
 		children: group.children,
-		strength: 5,
+		strength: 4,
 		make: function(position) {
 			var boulder = boulderSym.place();
 			boulder.position = position;
@@ -124,9 +124,6 @@ var boulder = new function() {
 			var boulder = this.make(position);
 			group.addChild(boulder);
 		},
-		hit: function() {
-			this.strength--;
-		}
 	}
 };
 
@@ -463,28 +460,34 @@ function onFrame(event) {
 	//check to see if any bullets exist. If so, animate to nearest collidable object
 	if(bullets.length !== 0) {
 		bullets.forEach(function(bullet, index) {
-			boulder.children.forEach(function(boulder) {
-				if(bullet.bounds.intersects(boulder.bounds)) {
+			boulder.children.forEach(function(boulderEl, j) {
+				if(bullet.bounds.intersects(boulderEl.bounds)) {
 					bullet.remove();
 					bullets.splice(index, 1);
+					//console.log(boulderEl);
+					//console.log(boulder.strength--)
+					console.log(boulder._data);
+					//boulder._symbol._definition._data.strength--;
+					if(boulder._symbol._definition._data.strength <= 0) {
+						boulder.remove();
+					}
+					
 				}
 			});
-			//if(!bullet.isEmpty()) {
-				switch(bullet._data) {
-					case 'left':
-						bullet.position.x -= 3;
-						break;
-					case 'right':
-						bullet.position.x += 3;
-						break;
-					case 'up':
-						bullet.position.y -= 3;
-						break;
-					case 'down':
-						bullet.position.y += 3;
-						break;
-				}
-			//}
+			switch(bullet._data) {
+				case 'left':
+					bullet.position.x -= 3;
+					break;
+				case 'right':
+					bullet.position.x += 3;
+					break;
+				case 'up':
+					bullet.position.y -= 3;
+					break;
+				case 'down':
+					bullet.position.y += 3;
+					break;
+			}
 		});
 	}
 }
