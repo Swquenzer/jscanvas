@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Template | Stephen Quenzer</title>
+<!-- Load the Paper.js library -->
+<script type="text/javascript" src="dist/paper-full.js"></script>
+<!-- Load external PaperScript and associate it with canvas -->
+<script type="text/paperscript" src="js/main.js" canvas="canvas"></script>
+<style>
+	h1, h2 {
+		text-align: center;
+	}
+	canvas {
+		display: block;
+		border: 1px solid black;
+	}
+	.wrapper {
+		display: block;
+		text-align: center;
+	}
+	.center {
+		display: inline-block;
+	}
+</style>
+</head>
+<body>
+	<h1>Project Title!</h1>
+	<p id="counter"></p>
+	<div class="wrapper">
+		<span class="center">
+			<canvas id="canvas" height="500px" width="500px">
+			</canvas>
+			<input type="button" value="Connect a function in main.js using window.button()" onclick="button();">
+		</span>
+	</div>
+</body>
+</html>
