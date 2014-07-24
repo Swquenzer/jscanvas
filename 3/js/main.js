@@ -11,13 +11,17 @@ function acceleration(force, mass) {
 	if(force === 0) return 0;
 	return mass/force;
 }
+
+//fix this, it isn't quite right (make roh very small)
 function aeroDrag(dC, fA, velocity) {
 	//= -0.5 * drag coefficient * frontal area * rho * velocity^2
 	return (-.5*dC*fA*rho*velocity*velocity);
 }
 
+var allBalls = [];
+
 function simulate() {
-	b1 = new ball(20,   7, 2, 0, 5, 15, .8, 'blue');
+	//b1 = new ball(20,   7, 2, 0, 5, 15, .8, 'blue');
 	b2 = new ball(20,   7, 3, 0, 5, 15, .5, 'red');
 	b3 = new ball(20, 200, 4, -4, 5, 15, .5, 'green');
 	
@@ -45,9 +49,6 @@ function simulate() {
 
 		this.shape.onFrame = function(event) {
 			//Ball Physics
-
-			//gravity
-			//velocity
 			//aerodynamic drag
 			dx = aeroDrag(dC, fA, vx);
 			dy = aeroDrag(dC, fA, vy);
@@ -70,7 +71,15 @@ function simulate() {
 				|| this.position.x-this.radius < 0 && vx < 0) {
 				vx *= -elasticity;
 			}
+			//Other balls
+			for(var i=0; i<allBalls.length; i++) {
+				//console.log(this._id + ", " + allBalls[i].shape._id);
+				if(this._id != allBalls[i].shape._id && this.bounds.intersects(allBalls[i].shape.bounds)) {
+					//add this later
+				}
+			}
 		}
+		allBalls.push(this);
 	}
 
 	var counter = document.getElementById("counter");
